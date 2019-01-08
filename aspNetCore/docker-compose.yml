@@ -1,0 +1,16 @@
+version: "3"
+services:
+  asp_net_core:
+    build:
+      context: .
+    image: vtrifonovdocker/asp_net_core:v1
+    ports:
+      - "8888:80"
+    networks:
+      - net
+    volumes: 
+      - "asp-net-volume:/var/aspNetCore"
+networks:
+  net:
+volumes:
+  asp-net-volume:
