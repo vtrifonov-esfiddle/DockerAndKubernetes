@@ -1,0 +1,15 @@
+version: "3"
+services:
+  react-aspnetcore:
+    build:
+      context: .
+    ports:
+      - "5005:80"
+    networks:
+      - net
+    volumes: 
+      - "aspnet-volume:/var/aspNetCore"  
+networks:
+  net:
+volumes:
+  aspnet-volume:

@@ -9,7 +9,17 @@ services:
     networks:
       - net
     volumes: 
-      - "react-volume:/var/test-react"  
+      - "react-volume:/var/test-react"
+  react_aspnetcore:
+    build:
+      context: ./AspNetCore
+    image: vtrifonovdocker/react_aspnetcore:v1
+    ports:
+      - "5006:80"
+    networks:
+      - net
+    volumes: 
+      - "react-aspnetcore-volume:/var/test-react"
   nginx_host:
     image: nginx:1.14.2
     volumes: 
@@ -22,4 +32,5 @@ networks:
   net:
 volumes:
   react-volume:
+  react-aspnetcore-volume:
   nginx-host-volume:
