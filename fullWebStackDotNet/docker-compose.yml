@@ -1,5 +1,5 @@
 version: "3"
-services:
+services:  
   react:
     build:
       context: ./test-react
@@ -19,7 +19,7 @@ services:
     networks:
       - net
     volumes: 
-      - "react-aspnetcore-volume:/var/test-react"
+      - "react-aspnetcore-volume:/var/test-app"
   nginx_host:
     image: nginx:1.14.2
     volumes: 
