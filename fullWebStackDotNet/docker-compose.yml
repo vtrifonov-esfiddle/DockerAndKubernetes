@@ -1,5 +1,5 @@
 version: "3"
-services:  
+services:    
   react:
     build:
       context: ./test-react
@@ -10,16 +10,18 @@ services:
       - net
     volumes: 
       - "react-volume:/var/test-react"
+    container_name: react-v1
   react_aspnetcore:
     build:
       context: ./AspNetCore
-    image: vtrifonovdocker/react_aspnetcore:v1
+    image: vtrifonovdocker/react_aspnetcore:v2
     ports:
       - "5006:80"
     networks:
       - net
     volumes: 
-      - "react-aspnetcore-volume:/var/test-app"
+      - "webserver-volume:/var/app"
+    container_name: react_aspnetcore
   nginx_host:
     image: nginx:1.14.2
     volumes: 
@@ -32,5 +34,5 @@ networks:
   net:
 volumes:
   react-volume:
-  react-aspnetcore-volume:
+  webserver-volume: 
   nginx-host-volume:
