@@ -15,21 +15,22 @@ services:
     build:
       context: ./AspNetCore
       dockerfile: Dockerfile
-    image: vtrifonovdocker/react_aspnetcore:v4
+    image: vtrifonovdocker/react_aspnetcore:v3
     ports:
-      - "5007:80"
+      - "5006:80"
     networks:
       - net
     volumes: 
       - "webserver-volume:/app"
     depends_on:
       - npm_dependencies
+    command: ["bash"]
   npm_dependencies:
     build:
       context: ./AspNetCore
       dockerfile: npmDependencies.Dockerfile
       args:
-        - buildenv=
+        - buildenv=--env.prod
     user: "node"
     environment:
       - NODE_ENV=production  
