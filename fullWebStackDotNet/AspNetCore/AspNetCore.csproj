@@ -19,8 +19,8 @@
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
   </ItemGroup>
-<!-- 
-  <Target Name="Publish" AfterTargets="ComputeFilesToPublish">
+ 
+  <Target Name="StaticFilesPublish" AfterTargets="ComputeFilesToPublish">
     <ItemGroup>
       <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
@@ -28,6 +28,6 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
-  </Target> -->
+  </Target>
 
 </Project>
