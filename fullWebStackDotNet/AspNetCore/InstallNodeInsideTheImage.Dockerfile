@@ -11,8 +11,5 @@ WORKDIR /app
 COPY . /app
 
 RUN npm install
-RUN node ./node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js
-RUN node ./node_modules/webpack/bin/webpack.js
-
 RUN dotnet restore
-ENTRYPOINT ["dotnet", "run"]
+ENTRYPOINT [ "dotnet", "run" ]

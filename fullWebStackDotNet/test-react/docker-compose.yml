@@ -1,0 +1,20 @@
+version: "3.2"
+services:    
+  react:
+    build:
+      context: .
+    image: vtrifonovdocker/test_react:v1
+    ports:
+      - "3000:3000"
+    networks:
+      - net
+    volumes: 
+      - ".:/app/"
+    environment:
+      - NODE_ENV=dev
+      - CHOKIDAR_USEPOLLING=true
+    container_name: test-react  
+networks:
+  net:
+volumes:
+    react-volume:

@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 export class Home extends React.Component<RouteComponentProps<{}>, {}> {
     public render() {
         return <div>
-            <h1>Test Changes</h1>
+            <h1>Home page hot reload</h1>
             <p>Components</p>
             <ul>
                 <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
