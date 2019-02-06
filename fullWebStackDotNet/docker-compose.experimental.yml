@@ -1,0 +1,62 @@
+version: "3.2"
+services:    
+  react_aspnetcore:
+    build:
+      context: ./AspNetCore
+      dockerfile: Dockerfile
+    image: vtrifonovdocker/react_aspnetcore:v3
+    ports:
+      - "5006:80"
+    networks:
+      - net
+    volumes: 
+      - "webserver-experimental-volume:/app"
+    depends_on:
+      - npm_dependencies
+    command: ["bash"]
+  npm_webpack:
+    build:
+      context: ./AspNetCore
+      dockerfile: npmInstallWebpack.Dockerfile
+    image: vtrifonovdocker/npm_install_webpack:v1
+    ports:
+      - "5010:80"
+    networks:
+      - net
+    volumes: 
+      - type: bind 
+        source: ./AspNetCore 
+        target: /app
+    environment:
+      - NODE_ENV=dev
+    container_name: npm_webpack
+  npm_dependencies:
+    build:
+      context: ./AspNetCore
+      dockerfile: npmDependencies.Dockerfile
+      args:
+        - buildenv=
+    user: "node"
+    environment:
+      - NODE_ENV=production  
+    volumes:
+      - type: bind
+        source: C:\GithubRepos\DockerAndKubernetes\fullWebStackDotNet\AspNetCore
+        target: /app
+    container_name: react_aspnetcore_npm_dependencies
+  npm_dependencies_prod:
+    build:
+      context: ./AspNetCore
+      dockerfile: npmDependencies.Dockerfile
+      args:
+        buildenv: "--env.prod"
+    user: "node"
+    environment:
+      - NODE_ENV=production    
+    volumes:
+      - "webserver-experimental-volume:/app"
+    container_name: npm_dependencies_prod
+networks:
+  net:
+volumes:
+  webserver-experimental-volume:  

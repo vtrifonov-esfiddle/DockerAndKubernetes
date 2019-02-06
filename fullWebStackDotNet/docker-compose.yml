@@ -1,23 +1,23 @@
 version: "3.2"
 services:    
-  # react:
-  #   build:
-  #     context: ./test-react
-  #   image: vtrifonovdocker/test_react:v1
-  #   ports:
-  #     - "45000:3000"
-  #   networks:
-  #     - net
-  #   volumes: 
-  #     - "C:/GithubRepos/DockerAndKubernetes/fullWebStackDotNet/test-react:/app/"
-  #   environment:
-  #     - NODE_ENV=dev
-  #   container_name: react-v1
-  react_aspnetcore:
+  react:
+    build:
+      context: ./test-react
+    image: vtrifonovdocker/test_react:v1
+    ports:
+      - "3000:3000"
+    networks:
+      - net
+    volumes: 
+      - "C:/GithubRepos/DockerAndKubernetes/fullWebStackDotNet/test-react:/app/"
+    environment:
+      - NODE_ENV=dev
+    container_name: react-v1
+  react_aspnetcore_development:
     build:
       context: ./AspNetCore
-      dockerfile: InstallNodeInsideTheImage.Dockerfile
-    image: vtrifonovdocker/react_aspnetcore:v4
+      dockerfile: development.Dockerfile
+    image: vtrifonovdocker/react_aspnetcore:dev-v1
     ports:
       - "5000:80"
     networks:
@@ -30,49 +30,19 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - NODE_ENV=development      
       - CHOKIDAR_USEPOLLING=true
-    container_name: react_aspnetcore
-  # npm_webpack:
-  #   build:
-  #     context: ./AspNetCore
-  #     dockerfile: npmInstallWebpack.Dockerfile
-  #   image: vtrifonovdocker/npm_install_webpack:v1
-  #   ports:
-  #     - "5010:80"
-  #   networks:
-  #     - net
-  #   volumes: 
-  #     - type: bind 
-  #       source: ./AspNetCore 
-  #       target: /app
-  #   environment:
-  #     - NODE_ENV=dev
-  #   container_name: npm_webpack
-  # npm_dependencies:
-  #   build:
-  #     context: ./AspNetCore
-  #     dockerfile: npmDependencies.Dockerfile
-  #     args:
-  #       - buildenv=
-  #   user: "node"
-  #   environment:
-  #     - NODE_ENV=production  
-  #   volumes:
-  #     - type: bind
-  #       source: C:\GithubRepos\DockerAndKubernetes\fullWebStackDotNet\AspNetCore
-  #       target: /app
-  #   container_name: react_aspnetcore_npm_dependencies
-  # npm_dependencies_prod:
-  #   build:
-  #     context: ./AspNetCore
-  #     dockerfile: npmDependencies.Dockerfile
-  #     args:
-  #       buildenv: "--env.prod"
-  #   user: "node"
-  #   environment:
-  #     - NODE_ENV=production    
-  #   volumes:
-  #     - "webserver-volume:/app"
-  #   container_name: npm_dependencies_prod
+    container_name: react_aspnetcore_development
+  react_aspnetcore_production:
+    build:
+      context: ./AspNetCore
+      dockerfile: production.Dockerfile
+    image: vtrifonovdocker/react_aspnetcore:prod-v1
+    ports:
+      - "45000:80"
+    networks:
+      - net
+    volumes:       
+      - "webserver-production-volume:/app"
+    container_name: react_aspnetcore_production 
   # nginx_host:
   #   image: nginx:1.14.2
   #   volumes: 
@@ -84,6 +54,5 @@ services:
 networks:
   net:
 volumes:
-  react-volume:
-  webserver-volume: 
+  webserver-production-volume:  
   nginx-host-volume:
