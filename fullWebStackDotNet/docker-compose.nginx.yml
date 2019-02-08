@@ -1,0 +1,16 @@
+version: "3.2"
+services:    
+  nginx_host:
+    build:
+      context: ./AspNetCore
+      dockerfile: nginx.Dockerfile
+    image: vtrifonovdocker/nginx_host:prod-v1
+    ports:
+      - "9999:80"
+    networks:
+      - net
+    container_name: nginx_host_test
+networks:
+  net:
+volumes:
+  nginx-host-volume:

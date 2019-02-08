@@ -43,16 +43,17 @@ services:
     volumes:       
       - "webserver-production-volume:/app"
     container_name: react_aspnetcore_production 
-  # nginx_host:
-  #   image: nginx:1.14.2
-  #   volumes: 
-  #     - "nginx-host-volume:/usr/share/nginx/html"
-  #   networks:
-  #     - net
-  #   ports:
-  #     - "9999:80"
+  nginx_host:
+    build:
+      context: ./AspNetCore
+      dockerfile: nginx.Dockerfile
+    image: vtrifonovdocker/nginx_host:prod-v1
+    ports:
+      - "9999:80"
+    networks:
+      - net
+    container_name: nginx_host_production
 networks:
   net:
 volumes:
   webserver-production-volume:  
-  nginx-host-volume:
