@@ -1,0 +1,1 @@
+docker exec -it nginx_host_test bash

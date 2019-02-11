@@ -1,16 +1,26 @@
 version: "3.2"
 services:    
-  nginx_host:
+  react_aspnetcore_production:
     build:
       context: ./AspNetCore
+      dockerfile: production.Dockerfile
+    image: vtrifonovdocker/react_aspnetcore:prod-v1
+    container_name: react_aspnetcore_production_build 
+    ports:
+      - "42000:80"
+    networks:
+      - nginx-net
+  nginx_host:
+    build:
+      context: ./nginx
       dockerfile: nginx.Dockerfile
     image: vtrifonovdocker/nginx_host:prod-v1
     ports:
       - "9999:80"
     networks:
-      - net
+      - nginx-net
     container_name: nginx_host_test
 networks:
-  net:
+  nginx-net:
 volumes:
   nginx-host-volume:
