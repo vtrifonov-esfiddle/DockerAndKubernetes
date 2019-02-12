@@ -1,0 +1,29 @@
+version: "3.2"
+services:      
+  mongodb:
+    build:
+      context: ./
+    restart: always
+    networks:
+      mongo-net:
+        aliases:
+          - mongo
+    env_file: 
+      - ./secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
+    volumes:
+      - "mongo-volume:/data/db"
+    container_name: mongo-db
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 48081:8081
+    networks:
+      - mongo-net
+    env_file: 
+      - ./secrets/mongo-express.env # provides ME_CONFIG_MONGODB_ADMINUSERNAME and ME_CONFIG_MONGODB_ADMINPASSWORD
+    container_name: mongo-express
+networks:
+  mongo-net:
+volumes:
+  mongo-volume:

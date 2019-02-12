@@ -5,7 +5,7 @@ services:
       context: ./AspNetCore
       dockerfile: production.Dockerfile
     image: vtrifonovdocker/react_aspnetcore:prod-v1
-    container_name: react_aspnetcore_production_build 
+    container_name: react_aspnetcore_production 
     ports:
       - "42000:80"
     networks:
