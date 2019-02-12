@@ -9,7 +9,9 @@ services:
     ports:
       - "42000:80"
     networks:
-      - nginx-net
+      nginx-net:
+        aliases:
+          - react_aspnetcore_production
   nginx_host:
     build:
       context: ./nginx

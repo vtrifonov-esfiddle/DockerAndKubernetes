@@ -39,7 +39,9 @@ services:
     ports:
       - "45000:80"
     networks:
-      - net
+      net:
+        aliases:
+          - react_aspnetcore_production
     volumes:       
       - "webserver-production-volume:/app"
     container_name: react_aspnetcore_production 
