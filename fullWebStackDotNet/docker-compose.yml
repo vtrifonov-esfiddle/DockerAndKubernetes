@@ -55,7 +55,32 @@ services:
     networks:
       - net
     container_name: nginx_host_production
+  mongodb:
+    build:
+      context: ./MongoDb
+    restart: always
+    networks:
+      net:
+        aliases:
+          - mongo
+    env_file: 
+      - ./MongoDb/secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
+    volumes:
+      - "mongo-volume:/data/db"
+    container_name: mongo-db
+  mongodb_webapi:
+    build:      
+      context: ./MongoDbWebApi
+      dockerfile: production.Dockerfile
+    networks:
+      - net
+    ports:
+      - "45010:80"
+    env_file:
+      - ./MongoDbWebApi/secrets/webApiSecrets.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
+    container_name: mongodb_webapi_production
 networks:
   net:
 volumes:
-  webserver-production-volume:  
+  webserver-production-volume:
+  mongo-volume:  

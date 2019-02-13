@@ -12,12 +12,14 @@ services:
       - ./secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
     volumes:
       - "mongo-volume:/data/db"
-    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    container_name: mongo-db-dev
   mongo-express:
     image: mongo-express
     restart: always
     ports:
-      - 48081:8081
+      - "48081:8081"
     networks:
       - mongo-net
     env_file: 
