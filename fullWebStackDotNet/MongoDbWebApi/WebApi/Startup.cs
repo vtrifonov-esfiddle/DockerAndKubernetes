@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDbWebApi.WebApi.WeatherForecastRepository;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace MongoDbWebApi.WebApi
 {
@@ -26,21 +27,29 @@ namespace MongoDbWebApi.WebApi
         {
             services.AddMvc();
             services.AddScoped<IWeatherForecastsRepository, WeatherForecastsRepository>(); 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = 
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;           
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:45001", "http://localhost:45000", "http://localhost:49999"));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=WeatherForecasts}/{action=Get}");
+                    template: "{controller}/{action=Get}");
             });
         }
     }

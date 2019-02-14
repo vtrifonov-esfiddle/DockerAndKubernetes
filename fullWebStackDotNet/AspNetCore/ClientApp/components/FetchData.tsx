@@ -10,10 +10,18 @@ interface FetchDataExampleState {
 export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
         super();
-        this.state = { forecasts: [], loading: true };
+        this.loadWeatherForecasts();
+    }
 
-        fetch('api/SampleData/WeatherForecasts')
-            .then(response => response.json() as Promise<WeatherForecast[]>)
+    private getWebApiEndpoint(endpointUri: string){
+        const webApiUri: string = 'http://localhost:49998';
+        return `${webApiUri}/${endpointUri}`;
+    } 
+
+    private loadWeatherForecasts() {
+        this.state = { forecasts: [], loading: true };
+        fetch(this.getWebApiEndpoint('WeatherForecasts'))
+            .then(response => response.json())
             .then(data => {
                 this.setState({ forecasts: data, loading: false });
             });
@@ -26,9 +34,23 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
 
         return <div>
             <h1>Weather forecast</h1>
+            <button className={'btn btn-primary'} onClick={ () => { this.addRandomForecast() } }>Add Random Forecast</button>
             <p>This component demonstrates fetching data from the server.</p>
             { contents }
         </div>;
+    }
+
+    private addRandomForecast(): void {     
+        fetch(this.getWebApiEndpoint('WeatherForecasts'), {
+            method: 'POST'   
+        }).then(response => {
+            response.json().then(data => {
+                this.setState({
+                    forecasts: [data,...this.state.forecasts]
+                });                    
+            });
+            }
+        );
     }
 
     private static renderForecastsTable(forecasts: WeatherForecast[]) {
@@ -43,7 +65,7 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
             </thead>
             <tbody>
             {forecasts.map(forecast =>
-                <tr key={ forecast.dateFormatted }>
+                <tr key={ forecast.id }>
                     <td>{ forecast.dateFormatted }</td>
                     <td>{ forecast.temperatureC }</td>
                     <td>{ forecast.temperatureF }</td>
@@ -56,6 +78,7 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
 }
 
 interface WeatherForecast {
+    id: string;
     dateFormatted: string;
     temperatureC: number;
     temperatureF: number;

@@ -12,4 +12,4 @@ COPY . /app
 
 RUN npm install
 RUN dotnet restore
-ENTRYPOINT [ "dotnet", "run" ]
+ENTRYPOINT [ "dotnet", "watch", "run" ]

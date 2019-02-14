@@ -11,6 +11,8 @@ using MongoDbWebApi.WebApi.WeatherForecastRepository;
 
 namespace MongoDbWebApi.WebApi.WeatherForecastsApi
 {
+    [Route("")]
+    [Route("[controller]")]
     public class WeatherForecastsController : Controller
     {
         private readonly IWeatherForecastsRepository _weatherForecastRepository;
@@ -18,26 +20,25 @@ namespace MongoDbWebApi.WebApi.WeatherForecastsApi
         {
             _weatherForecastRepository = weatherForecastRepository;
         }
+
+
+
         [HttpGet]
+        [Route("")]
         public async Task<IEnumerable<WeatherForecastDto>> Get()
         {   
             var forecasts = await _weatherForecastRepository.GetForecasts();
-            var result = forecasts.Select(f => new WeatherForecastDto()
-                {
-                    Id = f.Id,
-                    Date = f.Date,
-                    Summary = f.Summary,
-                    TemperatureC = f.TemperatureC   
-                });
+            var result = forecasts.Select(f => new WeatherForecastDto(f));
             return result;
         }        
 
         [HttpPost]
-        [Route("newForecast")]
-        public async Task<WeatherForecast> AddNewForecast()
-        {
+        [Route("")]
+        public async Task<WeatherForecastDto> Post()
+        {            
             var newForecast = new GeneratedForecast();         
-            return await _weatherForecastRepository.InsertForecast(newForecast.Forecast);
+            WeatherForecast insertedForcast = await _weatherForecastRepository.InsertForecast(newForecast.Forecast);
+            return new WeatherForecastDto(insertedForcast);
         }
 
         private class GeneratedForecast

@@ -4,6 +4,14 @@ namespace MongoDbWebApi.WebApi.WeatherForecastsApi
 {
     public class WeatherForecastDto : WeatherForecast
     {
+        public WeatherForecastDto(WeatherForecast forecast)
+        {
+            Id = forecast.Id;
+            Date = forecast.Date;
+            Summary = forecast.Summary;
+            TemperatureC = forecast.TemperatureC;   
+        }
+
         public string DateFormatted
         {
             get

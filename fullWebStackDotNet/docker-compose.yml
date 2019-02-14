@@ -5,7 +5,7 @@ services:
       context: ./test-react
     image: vtrifonovdocker/test_react:v1
     ports:
-      - "3000:3000"
+      - "43000:3000"
     networks:
       - net
     volumes: 
@@ -19,7 +19,7 @@ services:
       dockerfile: development.Dockerfile
     image: vtrifonovdocker/react_aspnetcore:dev-v1
     ports:
-      - "5000:80"
+      - "45001:80"
     networks:
       - net
     volumes: 
@@ -45,16 +45,32 @@ services:
     volumes:       
       - "webserver-production-volume:/app"
     container_name: react_aspnetcore_production 
-  nginx_host:
+  # nginx_host_prod:
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: nginx.Dockerfile
+  #     args:
+  #       - environment=prod
+  #   image: vtrifonovdocker/nginx_host:prod-v1
+  #   ports:
+  #     - "49999:80"
+  #     - "49998:8081"       
+  #   networks:
+  #     - net
+  #   container_name: nginx_host_production
+  nginx_host_dev:
     build:
       context: ./nginx
       dockerfile: nginx.Dockerfile
-    image: vtrifonovdocker/nginx_host:prod-v1
+      args:
+        nginx_env: dev
+    image: vtrifonovdocker/nginx_host:dev-v1
     ports:
-      - "9999:80"
+      - "49999:80"
+      - "49998:8081"      
     networks:
       - net
-    container_name: nginx_host_production
+    container_name: nginx_host_development
   mongodb:
     build:
       context: ./MongoDb
@@ -68,7 +84,20 @@ services:
     volumes:
       - "mongo-volume:/data/db"
     container_name: mongo-db
-  mongodb_webapi:
+  mongodb_webapi_dev:
+    build:      
+      context: ./MongoDbWebApi
+      dockerfile: development.Dockerfile
+    networks:
+      - net
+    ports:
+      - "45011:80"
+    env_file:
+      - ./MongoDbWebApi/secrets/webApiSecrets.dev.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
+    volumes:
+      - "./MongoDbWebApi:/app"
+    container_name: mongodb_webapi_development
+  mongodb_webapi_prod:
     build:      
       context: ./MongoDbWebApi
       dockerfile: production.Dockerfile
@@ -77,7 +106,7 @@ services:
     ports:
       - "45010:80"
     env_file:
-      - ./MongoDbWebApi/secrets/webApiSecrets.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
+      - ./MongoDbWebApi/secrets/webApiSecrets.prod.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
     container_name: mongodb_webapi_production
 networks:
   net:
