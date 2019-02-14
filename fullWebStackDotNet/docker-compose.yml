@@ -7,7 +7,7 @@ services:
     ports:
       - "43000:3000"
     networks:
-      - net
+      - net-dev
     volumes: 
       - "C:/GithubRepos/DockerAndKubernetes/fullWebStackDotNet/test-react:/app/"
     environment:
@@ -21,7 +21,7 @@ services:
     ports:
       - "45001:80"
     networks:
-      - net
+      - net-dev
     volumes: 
       - type: bind 
         source: ./AspNetCore 
@@ -31,33 +31,6 @@ services:
       - NODE_ENV=development      
       - CHOKIDAR_USEPOLLING=true
     container_name: react_aspnetcore_development
-  react_aspnetcore_production:
-    build:
-      context: ./AspNetCore
-      dockerfile: production.Dockerfile
-    image: vtrifonovdocker/react_aspnetcore:prod-v1
-    ports:
-      - "45000:80"
-    networks:
-      net:
-        aliases:
-          - react_aspnetcore_production
-    volumes:       
-      - "webserver-production-volume:/app"
-    container_name: react_aspnetcore_production 
-  # nginx_host_prod:
-  #   build:
-  #     context: ./nginx
-  #     dockerfile: nginx.Dockerfile
-  #     args:
-  #       - environment=prod
-  #   image: vtrifonovdocker/nginx_host:prod-v1
-  #   ports:
-  #     - "49999:80"
-  #     - "49998:8081"       
-  #   networks:
-  #     - net
-  #   container_name: nginx_host_production
   nginx_host_dev:
     build:
       context: ./nginx
@@ -69,27 +42,27 @@ services:
       - "49999:80"
       - "49998:8081"      
     networks:
-      - net
+      - net-dev
     container_name: nginx_host_development
   mongodb:
     build:
       context: ./MongoDb
     restart: always
     networks:
-      net:
+      net-dev:
         aliases:
           - mongo
     env_file: 
       - ./MongoDb/secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
     volumes:
-      - "mongo-volume:/data/db"
+      - "mongo-dev-volume:/data/db"
     container_name: mongo-db
   mongodb_webapi_dev:
     build:      
       context: ./MongoDbWebApi
       dockerfile: development.Dockerfile
     networks:
-      - net
+      - net-dev
     ports:
       - "45011:80"
     env_file:
@@ -97,19 +70,8 @@ services:
     volumes:
       - "./MongoDbWebApi:/app"
     container_name: mongodb_webapi_development
-  mongodb_webapi_prod:
-    build:      
-      context: ./MongoDbWebApi
-      dockerfile: production.Dockerfile
-    networks:
-      - net
-    ports:
-      - "45010:80"
-    env_file:
-      - ./MongoDbWebApi/secrets/webApiSecrets.prod.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
-    container_name: mongodb_webapi_production
 networks:
-  net:
+  net-dev:
 volumes:
-  webserver-production-volume:
-  mongo-volume:  
+  webserver-dev-volume:
+  mongo-dev-volume:  

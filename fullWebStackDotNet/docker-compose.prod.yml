@@ -1,0 +1,51 @@
+version: "3.2"
+services:    
+  react_aspnetcore_production:
+    build:
+      context: ./AspNetCore
+      dockerfile: production.Dockerfile
+    image: vtrifonovdocker/react_aspnetcore:prod-v1
+    networks:
+      net:
+        aliases:
+          - react_aspnetcore_production
+    container_name: react_aspnetcore_production 
+  nginx_host_prod:
+    build:
+      context: ./nginx
+      dockerfile: nginx.Dockerfile
+      args:
+        - environment=prod
+    image: vtrifonovdocker/nginx_host:prod-v1
+    ports:
+      - "49999:80"
+      - "49998:8081"       
+    networks:
+      - net
+    container_name: nginx_host_production
+  mongodb:
+    build:
+      context: ./MongoDb
+    restart: always
+    networks:
+      net:
+        aliases:
+          - mongo
+    env_file: 
+      - ./MongoDb/secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
+    volumes:
+      - "mongo-production-volume:/data/db"
+    container_name: mongo-db
+  mongodb_webapi_prod:
+    build:      
+      context: ./MongoDbWebApi
+      dockerfile: production.Dockerfile
+    networks:
+      - net
+    env_file:
+      - ./MongoDbWebApi/secrets/webApiSecrets.prod.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
+    container_name: mongodb_webapi_production
+networks:
+  net:
+volumes:
+  mongo-production-volume:  

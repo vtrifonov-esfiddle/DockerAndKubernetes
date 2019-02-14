@@ -44,7 +44,7 @@ namespace MongoDbWebApi.WebApi
             }
 
             app.UseCors(builder =>
-                builder.WithOrigins("http://localhost:45001", "http://localhost:45000", "http://localhost:49999"));
+                builder.WithOrigins("http://localhost:49999"));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
