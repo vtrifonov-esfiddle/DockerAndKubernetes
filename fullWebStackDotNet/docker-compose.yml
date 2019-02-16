@@ -1,6 +1,6 @@
 version: "3.2"
 services:    
-  react:
+  react_development:
     build:
       context: ./test-react
     image: vtrifonovdocker/test_react:v1
@@ -12,7 +12,7 @@ services:
       - "C:/GithubRepos/DockerAndKubernetes/fullWebStackDotNet/test-react:/app/"
     environment:
       - NODE_ENV=dev
-    container_name: react-v1
+    container_name: react-development
   react_aspnetcore_development:
     build:
       context: ./AspNetCore
@@ -44,7 +44,7 @@ services:
     networks:
       - net-dev
     container_name: nginx_host_development
-  mongodb:
+  mongodb_dev:
     build:
       context: ./MongoDb
     restart: always
@@ -56,7 +56,7 @@ services:
       - ./MongoDb/secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
     volumes:
       - "mongo-dev-volume:/data/db"
-    container_name: mongo-db
+    container_name: mongo-db-development
   mongodb_webapi_dev:
     build:      
       context: ./MongoDbWebApi

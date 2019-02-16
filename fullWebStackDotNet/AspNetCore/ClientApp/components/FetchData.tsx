@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
+import { IWeatherForecast, ForecastsService } from './ForecastsService';
 
 interface FetchDataExampleState {
-    forecasts: WeatherForecast[];
+    forecasts: IWeatherForecast[];
     loading: boolean;
 }
 
@@ -11,20 +12,16 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
     constructor() {
         super();
         this.loadWeatherForecasts();
+        this.forecastsService = new ForecastsService();
     }
 
-    private getWebApiEndpoint(endpointUri: string){
-        const webApiUri: string = 'http://localhost:49998';
-        return `${webApiUri}/${endpointUri}`;
-    } 
+    private forecastsService: ForecastsService;
 
     private loadWeatherForecasts() {
         this.state = { forecasts: [], loading: true };
-        fetch(this.getWebApiEndpoint('WeatherForecasts'))
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ forecasts: data, loading: false });
-            });
+        this.forecastsService.getForecasts().then(forecasts => {
+            this.setState({ forecasts: forecasts, loading: false });            
+        });        
     }
 
     public render() {
@@ -41,19 +38,14 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
     }
 
     private addRandomForecast(): void {     
-        fetch(this.getWebApiEndpoint('WeatherForecasts'), {
-            method: 'POST'   
-        }).then(response => {
-            response.json().then(data => {
-                this.setState({
-                    forecasts: [data,...this.state.forecasts]
-                });                    
+        this.forecastsService.addRandomForecast().then((newForecast: IWeatherForecast) => {
+            this.setState({
+                forecasts: [newForecast,...this.state.forecasts]
             });
-            }
-        );
+        });
     }
 
-    private static renderForecastsTable(forecasts: WeatherForecast[]) {
+    private static renderForecastsTable(forecasts: IWeatherForecast[]) {
         return <table className='table'>
             <thead>
                 <tr>
@@ -75,12 +67,4 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
             </tbody>
         </table>;
     }
-}
-
-interface WeatherForecast {
-    id: string;
-    dateFormatted: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
 }
