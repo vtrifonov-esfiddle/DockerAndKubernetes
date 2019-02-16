@@ -10,9 +10,9 @@ interface FetchDataExampleState {
 
 export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDataExampleState> {
     constructor() {
-        super();
-        this.loadWeatherForecasts();
+        super();        
         this.forecastsService = new ForecastsService();
+        this.loadWeatherForecasts();
     }
 
     private forecastsService: ForecastsService;

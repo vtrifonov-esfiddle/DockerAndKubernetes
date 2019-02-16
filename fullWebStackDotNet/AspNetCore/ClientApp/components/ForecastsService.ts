@@ -1,7 +1,6 @@
 export class ForecastsService { 
     private getEndpointUri(endpointUri: string){
-        const webApiUri: string = 'http://localhost:49998';
-        return `${webApiUri}/${endpointUri}`;
+        return `${MONGO_DB_WEB_API_URI}/${endpointUri}`;
     }
     
     getForecasts(): Promise<IWeatherForecast[]> {
