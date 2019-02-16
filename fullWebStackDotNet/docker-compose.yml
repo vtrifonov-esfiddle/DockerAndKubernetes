@@ -1,18 +1,5 @@
 version: "3.2"
 services:    
-  react_development:
-    build:
-      context: ./test-react
-    image: vtrifonovdocker/test_react:v1
-    ports:
-      - "43000:3000"
-    networks:
-      - net-dev
-    volumes: 
-      - "C:/GithubRepos/DockerAndKubernetes/fullWebStackDotNet/test-react:/app/"
-    environment:
-      - NODE_ENV=dev
-    container_name: react-development
   react_aspnetcore_development:
     build:
       context: ./AspNetCore
