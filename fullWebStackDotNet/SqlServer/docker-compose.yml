@@ -1,0 +1,18 @@
+version: "3.2"
+services:    
+  sql_server_development:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: vtrifonovdocker/sql_server:dev-v1
+    ports:
+      - "1433:1433"
+    networks:
+      - sql-server-experimental-net
+    env_file:
+      - ./secrets/sqlServerSecrets.dev.env
+    container_name: sql_server_experimental
+networks:
+  sql-server-experimental-net:
+volumes:
+  sql-server-experimental-volume:
