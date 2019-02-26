@@ -11,6 +11,8 @@ services:
       - sql-server-experimental-net
     env_file:
       - ./secrets/sqlServerSecrets.dev.env
+    volumes:
+      - "./createDb:/usr/createDb"
     container_name: sql_server_experimental
 networks:
   sql-server-experimental-net:

@@ -10,16 +10,15 @@ function waitUntilServerIsUp() {
         then    
             break
         else
-            echo "Server is down"
+            echo "SQL Server is down"
         fi
     done
 }
 
 #run the setup script to create the DB and the schema in the DB
-function runCreateDbScript() {
+function runDbScript() {
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${SA_PASSWORD} -d master -i CreateDb.sql
 }
 
-
 waitUntilServerIsUp
-runCreateDbScript
+runDbScript

@@ -6,6 +6,6 @@ RUN mkdir -p /usr/createDb
 WORKDIR /usr/createDb
 
 COPY ./createDb /usr/createDb
-RUN chmod +x /usr/createDb/createDb.sh
+RUN chmod +x /usr/createDb/runCreateDbScript.sh
 
 CMD bash ./entrypoint.sh
