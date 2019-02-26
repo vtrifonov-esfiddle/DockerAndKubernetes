@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDbWebApi.WebApi.WeatherForecastRepository;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MongoDbWebApi.WebApi
 {
@@ -25,7 +26,7 @@ namespace MongoDbWebApi.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IWeatherForecastsRepository, WeatherForecastsRepository>(); 
             services.Configure<ForwardedHeadersOptions>(options =>
             {

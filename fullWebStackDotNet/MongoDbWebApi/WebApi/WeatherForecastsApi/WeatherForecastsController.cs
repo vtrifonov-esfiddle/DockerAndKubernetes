@@ -13,7 +13,7 @@ namespace MongoDbWebApi.WebApi.WeatherForecastsApi
 {
     [Route("")]
     [Route("[controller]")]
-    public class WeatherForecastsController : Controller
+    public class WeatherForecastsController : ControllerBase
     {
         private readonly IWeatherForecastsRepository _weatherForecastRepository;
         public WeatherForecastsController(IWeatherForecastsRepository weatherForecastRepository)
