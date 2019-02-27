@@ -5,15 +5,16 @@ using System.Data;
 using System.Data.SqlClient;
 using Dapper;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace SqlServerWebApi.WebApi
 {
     public class CounterRepository : ICounterRepository
     {
         private readonly string _connectionString;
-        public CounterRepository()
-        {
-            _connectionString = Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING");
+        public CounterRepository(IConfiguration configuration)
+        {            
+            _connectionString = configuration.GetValue<string>("SQL_CONNECTION_STRING");
         }
 
         public int GetCounter()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
 namespace MongoDbWebApi.WebApi.WeatherForecastRepository
@@ -9,9 +10,9 @@ namespace MongoDbWebApi.WebApi.WeatherForecastRepository
     {
         private readonly IMongoDatabase _weatherForecastDb;
         private const string CollectionName = "weatherForecast";
-        public WeatherForecastsRepository()
+        public WeatherForecastsRepository(IConfiguration configuration)
         {            
-            string connectionString = Environment.GetEnvironmentVariable("MONGO_DB_WEB_API_CONNECTION_STRING");
+            string connectionString = configuration.GetValue<string>("CONNECTION_STRING");
             var mongoClient = new MongoDbClient(connectionString, "weatherForecast");            
             _weatherForecastDb = mongoClient.Database;
         }

@@ -45,8 +45,9 @@ namespace SqlServerWebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            string webClientHost = Configuration.GetValue<string>("WEBCLIENT_HOST");
             app.UseCors(builder =>
-                builder.WithOrigins("http://localhost:49999", "http://localhost:48000"));
+                builder.WithOrigins(webClientHost));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -89,13 +89,13 @@
             }
         },
         {
-            "name": "Attach to Docker SqlServerWebApi experimental",
+            "name": "Attach to Docker SqlServerWebApi development",
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickRemoteProcess}",
             "pipeTransport": {
                 "pipeProgram": "docker",
-                "pipeArgs": [ "exec", "-i", "sql_webapi_experimental" ],
+                "pipeArgs": [ "exec", "-i", "sql_server_webapi_development" ],
                 "debuggerPath": "/root/vsdbg/vsdbg",
                 "pipeCwd": "${workspaceFolder}/SqlServerWebApi",
                 "quoteArgs": false

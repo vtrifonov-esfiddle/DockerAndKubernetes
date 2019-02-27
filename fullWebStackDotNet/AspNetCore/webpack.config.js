@@ -24,7 +24,8 @@ module.exports = (env) => {
         },
         plugins: [
             new webpack.DefinePlugin({
-                MONGO_DB_WEB_API_URI: JSON.stringify('http://localhost:49998')
+                MONGO_DB_WEB_API_URI: JSON.stringify('http://localhost:49998'),
+                SQL_SERVER_WEB_API_URI: JSON.stringify('http://localhost:49997')
             }),
             new CheckerPlugin(),
             new webpack.DllReferencePlugin({

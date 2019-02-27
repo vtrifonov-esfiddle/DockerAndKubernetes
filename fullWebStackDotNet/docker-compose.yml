@@ -5,14 +5,13 @@ services:
       context: ./AspNetCore
       dockerfile: development.Dockerfile
     image: vtrifonovdocker/react_aspnetcore:dev-v1
-    ports:
-      - "45001:80"
     networks:
       - net-dev
     volumes: 
-      - type: bind 
-        source: ./AspNetCore 
-        target: /app
+      - "./AspNetCore/ClientApp:/app/ClientApp"
+      - "./AspNetCore/Controllers:/app/Controllers"
+      - "./AspNetCore/Views:/app/Views"
+      - "./AspNetCore/wwwroot:/app/wwwroot"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - NODE_ENV=development      
@@ -28,6 +27,7 @@ services:
     ports:
       - "49999:80"
       - "49998:8081"      
+      - "49997:8082"
     networks:
       - net-dev
     container_name: nginx_host_development
@@ -50,13 +50,38 @@ services:
       dockerfile: development.Dockerfile
     networks:
       - net-dev
-    ports:
-      - "45011:80"
     env_file:
       - ./MongoDbWebApi/secrets/webApiSecrets.dev.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
     volumes:
-      - "./MongoDbWebApi:/app"
+      - "./MongoDbWebApi/WebApi:/app/WebApi"
     container_name: mongodb_webapi_development
+  sql_server_webapi_dev:
+    build:      
+      context: ./SqlServerWebApi
+      dockerfile: development.Dockerfile
+    networks:
+      - net-dev
+    volumes:
+      - "./SqlServerWebApi/WebApi:/app/WebApi"
+    container_name: sql_server_webapi_development
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    env_file:
+      - ./SqlServerWebApi/secrets/sqlServerWebApiSecrets.dev.env
+  sql_server_development:
+    build:
+      context: ./SqlServer
+      dockerfile: Dockerfile
+    image: vtrifonovdocker/sql_server:dev-v1
+    ports:
+      - "1433:1433"
+    networks:
+      - net-dev
+    env_file:
+      - ./SqlServer/secrets/sqlServerSecrets.dev.env
+    volumes:
+      - "./SqlServer/createDb:/usr/createDb"
+    container_name: sql_server_development
 networks:
   net-dev:
 volumes:

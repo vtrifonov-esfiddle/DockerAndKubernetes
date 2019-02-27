@@ -22,11 +22,10 @@ namespace SqlServerWebApi.WebApi
             return _counterRepository.GetCounter();
         }
 
-
-        [HttpPut("{counter}")]
-        public void Put(int counter)
+        [HttpPost("{count}")]
+        public void Post(int count)
         {
-            _counterRepository.UpdateCounter(counter);
+            _counterRepository.UpdateCounter(count);            
         }
     }
 }

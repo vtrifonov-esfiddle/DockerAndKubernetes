@@ -44,8 +44,9 @@ namespace MongoDbWebApi.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            string webClientHost = Configuration.GetValue<string>("WEBCLIENT_HOST");
             app.UseCors(builder =>
-                builder.WithOrigins("http://localhost:49999"));
+                builder.WithOrigins(webClientHost));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -19,7 +19,11 @@ namespace MongoDbWebApi.WebApi
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()      
-                .Build();
+            .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.AddEnvironmentVariables("MONGO_DB_WEB_API_");
+            })
+            .UseStartup<Startup>()      
+            .Build();
     }
 }
