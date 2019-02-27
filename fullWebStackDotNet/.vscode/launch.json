@@ -65,7 +65,7 @@
             "name": "SqlServerWebApi Launch (local machine)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildAspNetCore",
             "program": "${workspaceFolder}/SqlServerWebApi/bin/Debug/netcoreapp2.2/SqlServerWebApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/SqlServerWebApi",
@@ -86,6 +86,22 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "Attach to Docker SqlServerWebApi experimental",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickRemoteProcess}",
+            "pipeTransport": {
+                "pipeProgram": "docker",
+                "pipeArgs": [ "exec", "-i", "sql_webapi_experimental" ],
+                "debuggerPath": "/root/vsdbg/vsdbg",
+                "pipeCwd": "${workspaceFolder}/SqlServerWebApi",
+                "quoteArgs": false
+            },
+            "sourceFileMap": {
+                "/app": "${workspaceFolder}/SqlServerWebApi"
             }
         }
     ,]

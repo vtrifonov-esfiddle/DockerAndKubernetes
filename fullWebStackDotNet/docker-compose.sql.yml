@@ -1,0 +1,35 @@
+version: "3.2"
+services:    
+  mongodb_webapi_dev:
+    build:      
+      context: ./SqlServerWebApi
+      dockerfile: development.Dockerfile
+    networks:
+      - sql-server-net
+    ports:
+      - "48000:80"
+    volumes:
+      - "./SqlServerWebApi:/app"
+    container_name: sql_webapi_development
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    env_file:
+      - ./SqlServerWebApi/secrets/sqlServerWebApiSecrets.dev.env
+  sql_server_development:
+    build:
+      context: ./SqlServer
+      dockerfile: Dockerfile
+    image: vtrifonovdocker/sql_server:dev-v1
+    ports:
+      - "1433:1433"
+    networks:
+      - sql-server-net
+    env_file:
+      - ./SqlServer/secrets/sqlServerSecrets.dev.env
+    volumes:
+      - "./SqlServer/createDb:/usr/createDb"
+    container_name: sql_server_development
+networks:
+  sql-server-net:
+volumes:
+  sql-server-volume:
