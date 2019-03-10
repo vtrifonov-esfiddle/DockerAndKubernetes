@@ -1,11 +1,15 @@
 version: '3.4'
-
 services:
   aspnet-deploy:
     image: vtrifonovdocker/asp-net:prod
     ports:
       - "46000:80"
     container_name: aspnet-deploy
+  sql-server-deploy:
+    image: vtrifonovdocker/sql-server-win:prod
+    env_file: 
+      - "./secrets/sqlServerSecrets.env"
+    container_name: sql-server-deploy
 networks:
   default:
     external:

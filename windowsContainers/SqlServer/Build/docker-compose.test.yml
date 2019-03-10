@@ -1,0 +1,15 @@
+version: "3.4"
+services:
+  sql-server-win-test:
+    build:
+      context: ../
+      dockerfile: Build/Dockerfile
+    image: vtrifonovdocker/sql-server-win:test
+    ports:
+      - "41433:1433"
+    env_file: 
+      - "./secrets/sqlServerSecrets.env"
+networks:
+  default:
+    external:
+      name: nat

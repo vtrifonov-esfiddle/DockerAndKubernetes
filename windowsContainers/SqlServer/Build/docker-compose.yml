@@ -1,0 +1,7 @@
+version: "3.4"
+services:
+  sql-server-win-build:
+    build:
+      context: ../
+      dockerfile: Build/Dockerfile
+    image: vtrifonovdocker/sql-server-win:prod
