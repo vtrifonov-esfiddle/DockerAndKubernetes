@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  aspnet-build:
+    image: vtrifonovdocker/asp-net:prod
+    build:
+      context: ../
+      dockerfile: Build/Dockerfile

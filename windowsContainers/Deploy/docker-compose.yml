@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  aspnet-deploy:
+    image: vtrifonovdocker/asp-net:prod
+    ports:
+      - "46000:80"
+    container_name: aspnet-deploy
+networks:
+  default:
+    external:
+      name: nat
