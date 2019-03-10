@@ -2,7 +2,7 @@
 
 ## Production Build AspNet
 
-Run in powershell from the repository root run:
+Run in powershell from the repository root:
 
 ```
 .\Aspnet\Build\build.ps1
@@ -10,13 +10,13 @@ Run in powershell from the repository root run:
 
 ## Deploy Production Images
 
-Run in powershell from the repository root run:
+Run in powershell from the repository root:
 
 ```
 .\Deploy\deploy.ps1
 ```
 
-To clean up the deployment run in powershell from the repository root run:
+To clean up the deployment run in powershell from the repository root:
 ```
 .\Deploy\cleanup.ps1
 ```
