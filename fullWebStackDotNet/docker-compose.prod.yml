@@ -1,9 +1,6 @@
 version: "3.2"
 services:    
   react_aspnetcore_production:
-    build:
-      context: ./AspNetCore
-      dockerfile: production.Dockerfile
     image: vtrifonovdocker/react_aspnetcore:prod-v1
     networks:
       net:
@@ -11,22 +8,16 @@ services:
           - react_aspnetcore_production
     container_name: react_aspnetcore_production 
   nginx_host_prod:
-    build:
-      context: ./nginx
-      dockerfile: nginx.Dockerfile
-      args:
-        - environment=prod
     image: vtrifonovdocker/nginx_host:prod-v1
     ports:
-      - "49999:80"
-      - "49998:8081"       
+      - "46999:80"
+      - "46998:8081"              
+      - "46997:8082"
     networks:
       - net
     container_name: nginx_host_production
   mongodb:
-    build:
-      context: ./MongoDb
-    restart: always
+    image: vtrifonovdocker/mongodb:prod-v1
     networks:
       net:
         aliases:
@@ -37,14 +28,34 @@ services:
       - "mongo-production-volume:/data/db"
     container_name: mongo-db
   mongodb_webapi_prod:
-    build:      
-      context: ./MongoDbWebApi
-      dockerfile: production.Dockerfile
+    image: vtrifonovdocker/mongodb_webapi:prod-v1
     networks:
       - net
     env_file:
       - ./MongoDbWebApi/secrets/webApiSecrets.prod.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
     container_name: mongodb_webapi_production
+  sql_server_webapi_prod:
+    image: vtrifonovdocker/sql_server_webapi:prod-v1
+    networks:
+      - net
+    volumes:
+      - "./SqlServerWebApi/WebApi:/app/WebApi"
+    container_name: sql_server_webapi_production
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    env_file:
+      - ./SqlServerWebApi/secrets/sqlServerWebApiSecrets.prod.env
+  sql_server_prod:
+    image: vtrifonovdocker/sql_server:prod-v1
+    ports:
+      - "1433:1433"
+    networks:
+      - net
+    env_file:
+      - ./SqlServer/secrets/sqlServerSecrets.prod.env
+    volumes:
+      - "./SqlServer/createDb:/usr/createDb"
+    container_name: sql_server_production
 networks:
   net:
 volumes:

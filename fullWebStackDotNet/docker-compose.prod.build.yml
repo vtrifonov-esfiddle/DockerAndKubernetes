@@ -1,0 +1,37 @@
+version: "3.2"
+services:    
+  react_aspnetcore_production:
+    build:
+      context: ./AspNetCore
+      dockerfile: production.Dockerfile
+    image: vtrifonovdocker/react_aspnetcore:prod-v1
+  nginx_host_prod:
+    build:
+      context: ./nginx
+      dockerfile: nginx.Dockerfile
+      args:
+        - environment=prod
+    image: vtrifonovdocker/nginx_host:prod-v1
+  mongodb:
+    build:
+      context: ./MongoDb
+    image: vtrifonovdocker/mongodb:prod-v1
+    env_file: 
+      - ./MongoDb/secrets/mongo.env #provides MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
+  mongodb_webapi_prod:
+    build:      
+      context: ./MongoDbWebApi
+      dockerfile: production.Dockerfile
+    image: vtrifonovdocker/mongodb_webapi:prod-v1
+    env_file:
+      - ./MongoDbWebApi/secrets/webApiSecrets.prod.env #provides MONGO_DB_WEB_API_CONNECTION_STRING
+  sql_server_webapi_prod:
+    build:      
+      context: ./SqlServerWebApi
+      dockerfile: production.Dockerfile 
+    image: vtrifonovdocker/sql_server_webapi:prod-v1    
+  sql_server_prod:
+    build:
+      context: ./SqlServer
+      dockerfile: Dockerfile
+    image: vtrifonovdocker/sql_server:prod-v1    

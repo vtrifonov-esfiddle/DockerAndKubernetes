@@ -25,16 +25,15 @@ services:
         nginx_env: dev
     image: vtrifonovdocker/nginx_host:dev-v1
     ports:
-      - "49999:80"
-      - "49998:8081"      
-      - "49997:8082"
+      - "46999:80"
+      - "46998:8081"      
+      - "46997:8082"
     networks:
       - net-dev
     container_name: nginx_host_development
   mongodb_dev:
     build:
       context: ./MongoDb
-    restart: always
     networks:
       net-dev:
         aliases:
