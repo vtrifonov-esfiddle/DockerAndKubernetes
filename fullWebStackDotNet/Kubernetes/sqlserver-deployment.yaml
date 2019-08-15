@@ -63,7 +63,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sqlserver-service
+  name: sqlserver-nodeport-service
 spec:
   selector:
     app: sqlserver-pod
@@ -72,3 +72,14 @@ spec:
     port: 1433
     nodePort: 32000
   type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver-dev
+spec:
+  selector:
+    app: sqlserver-pod
+  ports:
+  - protocol: TCP
+    port: 1433

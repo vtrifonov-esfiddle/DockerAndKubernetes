@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver-webapi-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver-webapi-pod
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: sqlserver-webapi-pod
+    spec:
+      containers:
+      - name: sqlserver-webapi-prod
+        image: vtrifonovdocker/sql_server_webapi:prod-v1
+        ports:
+        - containerPort: 80
+        env:        
+        - name: SQLSERVER_WEB_API_SQL_CONNECTION_STRING
+          valueFrom: 
+            secretKeyRef:
+              name: sqlserver-webapi
+              key:  connection-string.txt
+        - name: SQLSERVER_WEB_API_WEBCLIENT_HOST
+          valueFrom:
+            secretKeyRef:
+              name: sqlserver-webapi
+              key: webclient-host.txt
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver-webapi-service
+spec:
+  selector:
+    app: sqlserver-webapi-pod
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 32100
+  type: NodePort
