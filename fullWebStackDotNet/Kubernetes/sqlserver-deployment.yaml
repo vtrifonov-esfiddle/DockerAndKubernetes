@@ -1,0 +1,74 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: sqlserver-data-volume
+  labels:
+    type: local
+spec:
+  storageClassName: sqlserver-data-volume
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/host_mnt/c/KubernetesVolumes/sqlserver-data-volume"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: sqlserver-data-claim
+spec:
+  storageClassName: sqlserver-data-volume
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver-pod
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: sqlserver-pod
+    spec:
+      volumes:
+      - name: sqlserver-data
+        persistentVolumeClaim:
+          claimName: sqlserver-data-claim
+      containers:
+      - name: sqlserver-dev
+        image: vtrifonovdocker/sql_server:dev
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - name: sqlserver-data
+          mountPath: /var/opt/mssql
+        env:        
+        - name: SA_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: sqlserver
+              key:  sa-password.txt
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver-service
+spec:
+  selector:
+    app: sqlserver-pod
+  ports:
+  - protocol: TCP
+    port: 1433
+    nodePort: 32000
+  type: NodePort
