@@ -1,5 +1,5 @@
 Param(
-    [string] $sqlServerPassword = 'Mystrong!password'
+    [string] $sqlServerPassword = (Get-Content -Path .\secrets\sa-password.txt)
 )
 
 function Test-HostSqlCmd() {
