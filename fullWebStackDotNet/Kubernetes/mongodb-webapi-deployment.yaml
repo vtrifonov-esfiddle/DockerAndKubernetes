@@ -1,56 +1,56 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sqlserver-webapi-deployment
+  name: mongodb-webapi-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sqlserver-webapi-pod
+      app: mongodb-webapi-pod
   template: # create pods using pod definition in this template
     metadata:
       # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
       # generated from the deployment name
       labels:
-        app: sqlserver-webapi-pod
+        app: mongodb-webapi-pod
     spec:
       containers:
-      - name: sqlserver-webapi-prod
-        image: vtrifonovdocker/sql_server_webapi:prod-v1
+      - name: mongodb-webapi-prod
+        image: vtrifonovdocker/mongodb_webapi:prod-v1
         ports:
         - containerPort: 80
         env:        
-        - name: SQLSERVER_WEB_API_SQL_CONNECTION_STRING
+        - name: MONGO_DB_WEB_API_CONNECTION_STRING
           valueFrom: 
             secretKeyRef:
-              name: sqlserver-webapi
+              name: mongodb-webapi
               key:  connection-string.txt
-        - name: SQLSERVER_WEB_API_WEBCLIENT_HOST
+        - name: MONGO_DB_WEB_API_WEBCLIENT_HOST
           valueFrom:
             secretKeyRef:
-              name: sqlserver-webapi
+              name: mongodb-webapi
               key: webclient-host.txt
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sql-server-webapi-production
+  name: mongodb-webapi-production
 spec:
   selector:
-    app: sqlserver-webapi-pod
+    app: mongodb-webapi-pod
   ports:
   - protocol: TCP
-    port: 80 
+    port: 80        
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sqlserver-webapi-service
+  name: mongodb-webapi
 spec:
   selector:
-    app: sqlserver-webapi-pod
+    app: mongodb-webapi-pod
   ports:
   - protocol: TCP
     port: 80
-    nodePort: 32100
+    nodePort: 31010
   type: NodePort

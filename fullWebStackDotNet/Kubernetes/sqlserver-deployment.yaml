@@ -46,8 +46,8 @@ spec:
         persistentVolumeClaim:
           claimName: sqlserver-data-claim
       containers:
-      - name: sqlserver-dev
-        image: vtrifonovdocker/sql_server:dev
+      - name: sqlserver-prod
+        image: vtrifonovdocker/sql_server:prod-v1
         ports:
         - containerPort: 1433
         volumeMounts:
@@ -76,7 +76,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sqlserver-dev
+  name: sqlserver
 spec:
   selector:
     app: sqlserver-pod

@@ -4,7 +4,7 @@ services:
     build:
       context: ./AspNetCore
       dockerfile: production.Dockerfile
-    image: vtrifonovdocker/react_aspnetcore:prod-v1
+    image: vtrifonovdocker/react_aspnetcore:prod-kubernetes-v1
   nginx_host_prod:
     build:
       context: ./nginx

@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-pod
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: nginx-pod
+    spec:
+      containers:
+      - name: nginx-prod
+        image: vtrifonovdocker/nginx_host:prod-v2
+        ports:
+        - containerPort: 80
+        - containerPort: 8081
+        - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx-pod
+  ports:
+  - name: react
+    protocol: TCP
+    port: 80
+  - name: mongodb
+    protocol: TCP
+    port: 8081
+  - name: sqlserver
+    protocol: TCP
+    port: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-react-aspnetcore
+spec:
+  selector:
+    app: nginx-pod
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 31999
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-mongodb
+spec:
+  selector:
+    app: nginx-pod
+  ports:
+  - protocol: TCP
+    port: 8081
+    nodePort: 31998
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-sqlserver
+spec:
+  selector:
+    app: nginx-pod
+  ports:
+  - protocol: TCP
+    port: 8082
+    nodePort: 31997
+  type: NodePort
