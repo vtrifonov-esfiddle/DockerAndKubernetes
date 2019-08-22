@@ -7,11 +7,12 @@ metadata:
 spec:
   storageClassName: mongodb-data-volume
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/host_mnt/c/KubernetesVolumes/mongodb-data-volume"
+    path: "/DockerDesktopVM/volumes/mongodb-data-volume" # linux directory inside DockerDesktopVM. Workarounds as mongodb requires exclusive lock which windows smb share doesn't support
+    type: DirectoryOrCreate
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -23,7 +24,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -50,9 +51,9 @@ spec:
         image: vtrifonovdocker/mongodb:prod-v1
         ports:
         - containerPort: 27017
-        # volumeMounts:
-        # - name: mongodb-data
-        #   mountPath: /data/db
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
         env:        
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom: 
