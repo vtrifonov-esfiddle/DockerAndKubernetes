@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: mongodb-mongorestore
 spec:
+  ttlSecondsAfterFinished: 180
   template:
     spec:
       volumes:

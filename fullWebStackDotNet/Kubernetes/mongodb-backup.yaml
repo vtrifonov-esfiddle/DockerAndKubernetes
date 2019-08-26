@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: mongodb-mongodump
 spec:
+  ttlSecondsAfterFinished: 180
   template:
     spec:
       volumes:
@@ -28,5 +29,5 @@ spec:
               name: mongodb
               key:  root-password.txt
         - name: MONGO_PORT
-          value: 27017
+          value: "27017"
       restartPolicy: Never
