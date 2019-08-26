@@ -40,17 +40,4 @@ spec:
     app: mongodb-webapi-pod
   ports:
   - protocol: TCP
-    port: 80        
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongodb-webapi
-spec:
-  selector:
-    app: mongodb-webapi-pod
-  ports:
-  - protocol: TCP
     port: 80
-    nodePort: 31010
-  type: NodePort

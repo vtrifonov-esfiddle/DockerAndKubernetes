@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-mongorestore
+spec:
+  template:
+    spec:
+      volumes:
+      - name: mongodb-restore-vol
+        persistentVolumeClaim:
+          claimName: mongodb-backups-claim
+      containers:
+      - name: mongodb-mongorestore
+        image: vtrifonovdocker/mongodb:prod-v1
+        command: ["mongorestore", "--host", "mongo", "--port", "$(MONGO_PORT)", "--username", "$(MONGO_INITDB_ROOT_USERNAME)", "--password", "$(MONGO_INITDB_ROOT_PASSWORD)", "--authenticationDatabase=admin", "--drop", "/mongodb-restore/"]
+        volumeMounts:
+        - name: mongodb-restore-vol
+          mountPath: /mongodb-restore
+        env:        
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb
+              key:  root-username.txt
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb
+              key:  root-password.txt
+        - name: MONGO_PORT
+          value: "27017"
+      restartPolicy: Never

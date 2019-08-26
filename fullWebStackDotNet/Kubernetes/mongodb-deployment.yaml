@@ -12,7 +12,6 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/DockerDesktopVM/volumes/mongodb-data-volume" # linux directory inside DockerDesktopVM. Workarounds as mongodb requires exclusive lock which windows smb share doesn't support
-    type: DirectoryOrCreate
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -20,6 +19,33 @@ metadata:
   name: mongodb-data-claim
 spec:
   storageClassName: mongodb-data-volume
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mongodb-backups-volume
+  labels:
+    type: local
+spec:
+  storageClassName: mongodb-backups-volume
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/host_mnt/c/KubernetesVolumes/mongodb-backups-volume"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mongodb-backups-claim
+spec:
+  storageClassName: mongodb-backups-volume
   accessModes:
     - ReadWriteOnce
   resources:
