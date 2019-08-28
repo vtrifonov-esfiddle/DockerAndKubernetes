@@ -11,11 +11,11 @@ function Remove-ReactAspnet() {
     kubectl delete service react-aspnetcore-production
 }
 
-function Remove-Mongodb() {
-    kubectl delete deployment mongodb-deployment
-    kubectl delete service mongo    
+function Remove-Mongodb() {    
     kubectl delete secret mongodb
-    kubectl delete pvc mongodb-data-claim
+    kubectl delete pvc mongodb-statefulset-claim-mongodb-statefulset-0    
+    kubectl delete -f .\mongodb-statefulset.yaml 
+    kubectl delete pod mongodb-statefulset-0
     kubectl delete pv mongodb-data-volume
     kubectl delete pvc mongodb-backups-claim
     kubectl delete pv mongodb-backups-volume
@@ -34,10 +34,10 @@ function Remove-SqlserverWebApi() {
 }
 
 function Remove-Sqlserver() {
-    kubectl delete deployment sqlserver-deployment
-    kubectl delete service sqlserver
-    kubectl delete pvc sqlserver-data-claim
-    kubectl delete secret sqlserver
+    kubectl delete secret sqlserver        
+    kubectl delete pvc sqlserver-statefulset-claim-sqlserver-statefulset-0
+    kubectl delete -f .\sqlserver-statefulset.yaml
+    kubectl delete pod sqlserver-statefulset-0
     kubectl delete pv sqlserver-data-volume
 }
 

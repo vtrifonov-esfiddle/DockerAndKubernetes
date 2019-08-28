@@ -1,0 +1,1 @@
+kubectl -f ..\sqlserver-statefulset.yaml apply

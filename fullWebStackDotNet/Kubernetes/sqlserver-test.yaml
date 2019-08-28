@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sqlserver-test
+spec:
+  ttlSecondsAfterFinished: 180
+  template:
+    spec:
+      containers:
+      - name: sqlserver-test
+        image: vtrifonovdocker/sql_server:prod-v1
+        command: ["/opt/mssql-tools/bin/sqlcmd", "-S", "$(SQL_HOST),$(SQL_PORT)", "-U", "sa", "-P", "$(SA_PASSWORD)", "-Q", "SELECT @@VERSION"]
+        env:        
+        - name: SA_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: sqlserver
+              key:  sa-password.txt
+        - name: SQL_PORT
+          value: "1433"
+        - name: SQL_HOST
+          value: sqlserver-statefulset
+      restartPolicy: Never

@@ -1,4 +1,4 @@
-function New-RootCredentialsSecret() {
+function New-MongoDbCredentialsSecret() {
     $mongodbSecretsDir = ".\secrets\mongodb"
     $rootUsername = "$mongodbSecretsDir\root-username.txt"
     $rootPassword = "$mongodbSecretsDir\root-password.txt"
@@ -21,13 +21,13 @@ function New-SqlServerWebApiSecrets() {
 }
 
 New-SaSecret
-kubectl -f .\sqlserver-deployment.yaml apply
+kubectl -f .\sqlserver-statefulset.yaml apply
 
 New-SqlServerWebApiSecrets
 kubectl -f .\sqlserver-webapi-deployment.yaml apply
 
-New-RootCredentialsSecret
-kubectl -f .\mongodb-deployment.yaml apply
+New-MongoDbCredentialsSecret
+kubectl -f .\mongodb-statefulset.yaml apply
 
 New-MongodbWebApiSecrets
 kubectl -f .\mongodb-webapi-deployment.yaml apply

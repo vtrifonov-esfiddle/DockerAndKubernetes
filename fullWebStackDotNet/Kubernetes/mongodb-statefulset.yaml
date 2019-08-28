@@ -1,0 +1,99 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mongodb-data-volume
+  labels:
+    type: local
+spec:
+  storageClassName: mongodb-data-volume
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/DockerDesktopVM/volumes/mongodb-data-volume" # linux directory inside DockerDesktopVM. Workarounds as mongodb requires exclusive lock which windows smb share doesn't support
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mongodb-backups-volume
+  labels:
+    type: local
+spec:
+  storageClassName: mongodb-backups-volume
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/host_mnt/c/KubernetesVolumes/mongodb-backups-volume"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mongodb-backups-claim
+spec:
+  storageClassName: mongodb-backups-volume
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-statefulset
+spec:
+  serviceName: mongodb-statefulset
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-statefulset-pod
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: mongodb-statefulset-pod
+    spec:
+      containers:
+      - name: mongodb-statefulset-prod
+        image: vtrifonovdocker/mongodb:prod-v1
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-statefulset-claim
+          mountPath: /data/db
+        env:        
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb
+              key:  root-username.txt
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb
+              key:  root-password.txt
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-statefulset-claim
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: mongodb-data-volume
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  selector:
+    app: mongodb-statefulset-pod
+  ports:
+  - protocol: TCP
+    port: 27017
+  clusterIP: None

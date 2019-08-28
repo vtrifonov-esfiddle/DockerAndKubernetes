@@ -1,0 +1,67 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: sqlserver-data-volume
+  labels:
+    type: local
+spec:
+  storageClassName: sqlserver-data-volume
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/host_mnt/c/KubernetesVolumes/sqlserver-data-volume"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sqlserver-statefulset
+spec:
+  serviceName: sqlserver-statefulset
+  selector:
+    matchLabels:
+      app: sqlserver-statefulset-pod
+  replicas: 1
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: sqlserver-statefulset-pod
+    spec:
+      containers:
+      - name: sqlserver-statefulset-prod
+        image: vtrifonovdocker/sql_server:prod-v1
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - name: sqlserver-statefulset-claim
+          mountPath: /var/opt/mssql
+        env:        
+        - name: SA_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: sqlserver
+              key:  sa-password.txt
+  volumeClaimTemplates:
+  - metadata:
+      name: sqlserver-statefulset-claim
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: sqlserver-data-volume
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver
+spec:
+  selector:
+    app: sqlserver-statefulset-pod
+  ports:
+  - protocol: TCP
+    port: 1433
+  clusterIP: None

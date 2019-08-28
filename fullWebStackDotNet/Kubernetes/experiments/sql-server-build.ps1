@@ -1,1 +1,0 @@
-docker build --tag vtrifonovdocker/sql_server:dev ..\SqlServer
