@@ -21,16 +21,7 @@ function New-SqlServerWebApiSecrets() {
 }
 
 New-SaSecret
-kubectl -f .\sqlserver-statefulset.yaml apply
-
 New-SqlServerWebApiSecrets
-kubectl -f .\sqlserver-webapi-deployment.yaml apply
-
 New-MongoDbCredentialsSecret
-kubectl -f .\mongodb-statefulset.yaml apply
-
 New-MongodbWebApiSecrets
-kubectl -f .\mongodb-webapi-deployment.yaml apply
-
-kubectl -f .\nginx-deployment.yaml apply
-kubectl -f .\react-aspnet-deployment.yaml apply
+kubectl -f .\fullStack apply
