@@ -44,6 +44,14 @@ spec:
             secretKeyRef:
               name: sqlserver
               key:  sa-password.txt
+        readinessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - /usr/createDb/testReadinessProbe.sh
+          initialDelaySeconds: 40
+          periodSeconds: 60
   volumeClaimTemplates:
   - metadata:
       name: sqlserver-statefulset-claim
