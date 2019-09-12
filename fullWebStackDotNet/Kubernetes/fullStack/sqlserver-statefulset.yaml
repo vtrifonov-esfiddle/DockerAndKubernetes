@@ -52,6 +52,14 @@ spec:
               - /usr/createDb/testReadinessProbe.sh
           initialDelaySeconds: 40
           periodSeconds: 60
+        livenessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - /usr/createDb/testReadinessProbe.sh
+          initialDelaySeconds: 180
+          periodSeconds: 300
   volumeClaimTemplates:
   - metadata:
       name: sqlserver-statefulset-claim
